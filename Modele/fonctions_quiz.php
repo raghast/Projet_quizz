@@ -1,5 +1,14 @@
 <?php
 
+function importation_quiz()
+{
+    global $bdd;
+    $req = $bdd->query('SELECT id_quiz, nom FROM nom_quiz');
+    $donnees = $req->fetchAll();
+
+    return $donnees;
+}
+
 function importation_questions($id)
 {
     global $bdd;
