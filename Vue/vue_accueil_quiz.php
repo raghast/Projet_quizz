@@ -30,14 +30,14 @@
         <main>
         <?php
           // Affichage des Quiz grâce à une boucle foreach
-          for ($i=0; $i < 4; $i++) 
-          {
-            $j++;
-            $quiz = $manager->get($j);
+          foreach ($all_quiz as $quiz) 
+            {
+                $j++;
+                $obj_quiz = new Quiz($quiz);
         ?>
-            <p> Quiz n°<?= $j ?> : <?= $quiz->nom(); ?> <p>
-        <?php
-          }
+        <p> Quiz n°<?= $j ?> : <a href="?controller=page_quiz&&nom=<?= $obj_quiz->nom();?>&&id_quiz=<?= $obj_quiz->id();?>"><?= $obj_quiz->nom(); ?></a> <p>
+        <?php 
+            }             
         ?>
         </main>
         </div>
