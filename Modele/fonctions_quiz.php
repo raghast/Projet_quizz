@@ -34,7 +34,7 @@ function importation_reponses($id)
 function importation_br($id)
 {
     global $bdd;
-    $req = $bdd->prepare('SELECT id_br, bonne_reponse, id_question FROM bonne_reponse WHERE id_question = :id');
+    $req = $bdd->prepare('SELECT * FROM bonne_reponse as b INNER JOIN questions_quiz as q ON b.id_question_br = q.id_question WHERE id_quiz = :id');
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->execute();
     $donnees = $req->fetchAll();
