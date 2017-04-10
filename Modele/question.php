@@ -24,6 +24,11 @@ class Question
     return $this->_question;
   }
 
+  public function idquiz()
+  {
+    return $this->_id_quiz;
+  }
+  
   // Liste des setters
   
   public function setId($id)
