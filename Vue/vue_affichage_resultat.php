@@ -34,28 +34,29 @@
             $obj_br = new BReponse($br)
           ?>
             <br/>
-            <p> Question n°<?= $j; ?> : <?= $obj_br->question(); ?> </p><br/>
+            <h4 style="color: rgba(147,70,23);"> Question n°<?= $j; ?> : <?= $obj_br->question(); ?> </h4><br/>
           <?php
           // Je ne sais pas quoi mettre entre parenthèse dans la variable $_POST pour récupérer à chaque fois la réponse $_POST['1'], $_POST['2'], ...
           if ($_POST['reponse'][$j] == $obj_br->brep()) 
           {
-            echo 'Vous avez choisis la bonne réponse ! :<br/>';
-            echo $obj_br->brep();
+            echo 'Vous avez eu juste !<br/>';
+            echo 'Bonne réponse : <strong>' . $obj_br->brep() . '</strong>';
             echo "<br/>";
             $score ++;
 
           }
           else
           {
-            echo'Vous vous êtes tromper ! la bonne réponse était :<br/>';
-            echo $obj_br->brep();
+            echo 'Vous vous êtes tromper !<br/>';
+            echo 'La bonne réponse était : <strong>' . $obj_br->brep() . '</strong>';
             echo "<br/>";
           }
           }
         ?>
         <br/>
-        <p>Votre score est de : <?= ($score / 8)*100 ?> % de réussite</p><br/>
+        <p style="font-size: 1.5em";>Votre score est de : <strong style="color: red";><?= ($score / 8)*100 ?> % de réussite</strong></p><br/>
         </main>
+        <a href="?controller=accueil_quiz">Retour au sommaire</a><br/>
         </div>
       </div>
       <footer class="well">
