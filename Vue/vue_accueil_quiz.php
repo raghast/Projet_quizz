@@ -35,7 +35,7 @@
                 $j++;
                 $obj_quiz = new Quiz($quiz);
         ?>
-        <p> Quiz n°<?= $j ?> : <a href="?controller=page_quiz&&nom=<?= $obj_quiz->nom();?>&&id_quiz=<?= $obj_quiz->id();?>"><?= $obj_quiz->nom(); ?></a> <p>
+        <p> <strong style="color: brown;">Quiz n°<?= $j ?> : </strong><a href="?controller=page_quiz&&nom=<?= $obj_quiz->nom();?>&&id_quiz=<?= $obj_quiz->id();?>"><?= $obj_quiz->nom(); ?></a> <p>
         <?php 
             }             
         ?>
