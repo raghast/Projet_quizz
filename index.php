@@ -1,10 +1,9 @@
 <?php
 
-// La page init.php n'est pas encore définie mais elle le sera dans un futur proche !
 require_once 'Utils/init.php';
 
 // Variable controller avec l'acceuil du quizz comme valeur par défault
-$controller = 'accueil_quizz';
+$controller = 'accueil_quiz';
 
 if (!empty($_GET['controller'])) {
     $controller = $_GET['controller'];
