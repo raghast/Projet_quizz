@@ -2,25 +2,31 @@
 
 class Quiz
 {
-  private $_id;
-  private $_nom;
+  private $id;
+  private $nom;
+  private $questions;
   
-  public function __construct($value = array())
+  public function __construct($data)
   {
-      if(!empty($value))
+      $this->questions = [];
       $this->hydrate($value);
   }
 
   // Liste des getters
   
-  public function id()
+  public function getId()
   {
-    return $this->_id;
+    return $this->id;
   }
   
-  public function nom()
+  public function getNom()
   {
-    return $this->_nom;
+    return $this->nom;
+  }
+  
+  public function getQuestions()
+  {
+    return $this->questions;
   }
 
   // Liste des setters
@@ -36,7 +42,7 @@ class Quiz
     if ($id > 0)
     {
       // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
-      $this->_id = $id;
+      $this->id = $id;
     }
   }
   
@@ -45,23 +51,29 @@ class Quiz
     // On vérifie qu'il s'agit bien d'une chaîne de caractères.
     if (is_string($nom))
     {
-      $this->_nom = $nom;
+      $this->nom = $nom;
     }
+  }
+  
+  public function hydrate($data)
+  {
+     $this->setId($data['Quiz_Id']);
+     $this->setNom($data['Quiz_Nom']);
+     if (isset($data['Question_Question'])) 
+     {
+       $question = new Question($data);
+       if (!empty($this->questions[$question->getId()])) 
+       {
+         $this->questions[$question->getId()]->fusion($question);
+       } else 
+       {
+         $this->questions[$question->getId()] = $question;
+       }
+      }
   }
 
-  public function hydrate(array $donnees)
+  public function fusion(Quiz $quiz)
   {
-  foreach ($donnees as $key => $value)
-  {
-    // On récupère le nom du setter correspondant à l'attribut.
-    $method = 'set'.ucfirst($key);
-        
-    // Si le setter correspondant existe.
-    if (method_exists($this, $method))
-    {
-      // On appelle le setter.
-      $this->$method($value);
-    }
-  }
+     $this->questions = array_replace($this->questions, $quiz->getQuestions());
   }
 }
