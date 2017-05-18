@@ -3,38 +3,16 @@
 function importation_quiz()
 {
     global $bdd;
-    $req = $bdd->query('SELECT id_quiz, nom FROM nom_quiz');
+    $req = $bdd->query('SELECT Quiz_Id, Quiz_Nom FROM quiz');
     $donnees = $req->fetchAll();
 
     return $donnees;
 }
 
-function importation_questions($id)
+function importation_tout($id)
 {
     global $bdd;
-    $req = $bdd->prepare('SELECT id_question, question, id_quiz FROM questions_quiz WHERE id_quiz = :id');
-    $req->bindValue(':id', $id, PDO::PARAM_INT);
-    $req->execute();
-    $donnees = $req->fetchAll();
-
-    return $donnees;
-}
-
-function importation_reponses($id)
-{
-    global $bdd;
-    $req = $bdd->prepare('SELECT id_reponse, reponse, id_question FROM reponses_question WHERE id_question = :id');
-    $req->bindValue(':id', $id, PDO::PARAM_INT);
-    $req->execute();
-    $donnees = $req->fetchAll();
-
-    return $donnees;
-}
-
-function importation_br($id)
-{
-    global $bdd;
-    $req = $bdd->prepare('SELECT * FROM bonne_reponse as b INNER JOIN questions_quiz as q ON b.id_question_br = q.id_question WHERE id_quiz = :id');
+    $req = $bdd->prepare('SELECT * FROM quiz qz INNER JOIN questions qu ON qz.Quiz_Id = qu.Quiz_ID INNER JOIN reponses rep ON qu.Question_Id = rep.Question_Id WHERE qz.Quiz_Id = :id');
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->execute();
     $donnees = $req->fetchAll();
