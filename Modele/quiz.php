@@ -55,25 +55,27 @@ class Quiz
     }
   }
   
-  public function hydrate($data)
-  {
-     $this->setId($data['Quiz_Id']);
-     $this->setNom($data['Quiz_Nom']);
-     if (isset($data['Question_Question'])) 
-     {
-       $question = new Question($data);
-       if (!empty($this->questions[$question->getId()])) 
-       {
-         $this->questions[$question->getId()]->fusion($question);
-       } else 
-       {
-         $this->questions[$question->getId()] = $question;
-       }
-      }
-  }
+ public function hydrate($data) {
+        $this->setId($data['Quiz_Id']);
+        $this->setNom($data['Quiz_Nom']);
+        if (isset($data['Question_Question'])) 
+        {
+            $question = new Question($data);
+            $this->fusionQuestion($question);
+        }
+    }
 
-  public function fusion(Quiz $quiz)
-  {
-     $this->questions = array_replace($this->questions, $quiz->getQuestions());
-  }
+    public function fusion(Quiz $quiz) {
+        foreach ($quiz->getQuestions() as $question) {
+            $this->fusionQuestion($question);
+        }
+    }
+
+    public function fusionQuestion(Question $question) {
+        if (isset($this->questions[$question->getId()])) {
+            $this->questions[$question->getId()]->fusion($question);
+        } else {
+            $this->questions[$question->getId()] = $question;
+        }
+    }
 }
