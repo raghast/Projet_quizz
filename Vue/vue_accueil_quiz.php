@@ -17,29 +17,29 @@
   <body>
   <div class="container">
       <header class="jumbotron">
-          <h1>Faites un Quiz en ligne !</h1></br></br>
+          <h1>Faites un Quiz en ligne !</h1></br>
           <h2>Liste des Quiz</h2>
+          <h4><?php verifFlash(); ?></h4>
       </header>
 
       <div class="panel panel-default">
         <div class="panel-body">
-        <h2>Bienvenue sur mon outil de quiz en ligne !</h2>
-        <p>Prenez le temps de faire ça bien !</p>
-        <p>Cela risque d'être difficile</p></br>
-        <p>Voici la liste des Quiz disponible :</p>
-        <main>
-        <?php
-          // Affichage des Quiz grâce à une boucle foreach
-          foreach ($all_quiz as $quiz) 
+          <h2>Bienvenue sur mon outil de quiz en ligne !</h2>
+          <p>Prenez le temps de faire ça bien !</p>
+          <p>Cela risque d'être difficile</p></br>
+          <p>Voici la liste des Quiz disponible :</p>
+          <main>
+            <?php
+            // Affichage des Quizs grâce à une boucle foreach
+            foreach ($all_quiz as $quiz) 
             {
-                $j++;
-                $obj_quiz = new Quiz($quiz);
-        ?>
-        <p> <strong style="color: brown;">Quiz n°<?= $j ?> : </strong><a href="?controller=page_quiz&&nom=<?= $obj_quiz->nom();?>&&id_quiz=<?= $obj_quiz->id();?>"><?= $obj_quiz->nom(); ?></a> <p>
-        <?php 
-            }             
-        ?>
-        </main>
+              $j++;
+            ?>
+            <p> <strong style="color: brown;">Quiz n°<?= $j ?> : </strong><a href="?controller=page_quiz&&id_quiz=<?= $quiz['Quiz_Id'];?>"><?= $quiz['Quiz_Nom']; ?></a> <p>
+            <?php 
+              }             
+            ?>
+          </main>
         </div>
       </div>
       <footer class="well">
