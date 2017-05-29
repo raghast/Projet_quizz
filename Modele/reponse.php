@@ -71,6 +71,7 @@ class Reponse
 
     public function hydrate($data)
     {
+      // Affectation des valeurs de la réponses aux attributs respectifs
       $this->setId($data['Reponse_Id']);
       $this->setReponse($data['Reponse_Reponse']);
       $this->setState($data['Reponse_State']);
