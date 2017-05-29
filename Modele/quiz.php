@@ -9,7 +9,7 @@ class Quiz
   public function __construct($data)
   {
       $this->questions = [];
-      $this->hydrate($value);
+      $this->hydrate($data);
   }
 
   // Liste des getters
@@ -55,27 +55,37 @@ class Quiz
     }
   }
   
- public function hydrate($data) {
-        $this->setId($data['Quiz_Id']);
-        $this->setNom($data['Quiz_Nom']);
-        if (isset($data['Question_Question'])) 
-        {
-            $question = new Question($data);
-            $this->fusionQuestion($question);
-        }
+  public function hydrate($data) 
+  {
+    // Affectation de l'id et du nom du quiz aux attributs respectifs
+    $this->setId($data['Quiz_Id']);
+    $this->setNom($data['Quiz_Nom']);
+    // Si il y a une question dans le sous tableau $data, créer un objet pour cette question et appelle la fusion pour savoir si elle éxiste déjà dans l'attribut $questions
+    if (isset($data['Question_Question'])) 
+    {
+      $question = new Question($data);
+      $this->fusionQuestion($question);
     }
+  }
 
-    public function fusion(Quiz $quiz) {
-        foreach ($quiz->getQuestions() as $question) {
-            $this->fusionQuestion($question);
-        }
+  public function fusion(Quiz $quiz) 
+  {
+    // Appelle la fonction de fusion des question pour chaque question de l'attribut $questions de $quiz
+    foreach ($quiz->getQuestions() as $question) 
+    {
+      $this->fusionQuestion($question);
     }
+  }
 
-    public function fusionQuestion(Question $question) {
-        if (isset($this->questions[$question->getId()])) {
-            $this->questions[$question->getId()]->fusion($question);
-        } else {
-            $this->questions[$question->getId()] = $question;
-        }
+  public function fusionQuestion(Question $question) 
+  {
+    // Si une question avec l'id de $question éxiste déjà dans l'attribut tableau $questions, fusionne les 2 questions sinon ajoute la question au tableau $questions
+    if (isset($this->questions[$question->getId()])) 
+    {
+      $this->questions[$question->getId()]->fusion($question);
+    } else 
+    {
+      $this->questions[$question->getId()] = $question;
     }
+  }
 }
