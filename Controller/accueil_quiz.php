@@ -4,7 +4,7 @@
 require_once 'Modele/quiz.php';
 require_once 'Modele/fonctions_quiz.php';
 
-// Initialisation des variables
+// Initialisation des noms et id des quizs
 
 $all_quiz = importation_quiz();
 
