@@ -1,13 +1,4 @@
 <?php
 
-try
-			{
-   				 // On se connecte à MySQL
-    			$bdd = new PDO('mysql:host=localhost;dbname=projet_quiz;charset=utf8', 'root', '',
-    			array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-			}
-			catch(Exception $e)
-			{
-    			// En cas d'erreur, on affiche un message et on arrête tout
-       			die('Erreur : '.$e->getMessage());
-			}
+require_once 'Utils/session_flashbag.php';
+require_once 'Utils/connection_bdd.php';
