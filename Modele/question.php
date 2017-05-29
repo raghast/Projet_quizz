@@ -1,91 +1,95 @@
 <?php
 
-class Quiz
+class Question
 {
-  private $id;
-  private $nom;
-  private $questions;
-  
-  public function __construct($data)
-  {
-      $this->questions = [];
-      $this->hydrate($data);
-  }
+    private $id;
+    private $type;
+    private $question;
+    private $reponses;
 
-  // Liste des getters
-  
-  public function getId()
-  {
-    return $this->id;
-  }
-  
-  public function getNom()
-  {
-    return $this->nom;
-  }
-  
-  public function getQuestions()
-  {
-    return $this->questions;
-  }
+    public function __construct($data)
+    {
+        $this->reponses = [];
+        $this->hydrate($data);
+    }
 
-  // Liste des setters
+    // Liste des getters
   
-  public function setId($id)
-  {
-    // On convertit l'argument en nombre entier.
-    // Si c'en était déjà un, rien ne changera.
-    // Sinon, la conversion donnera le nombre 0 (à quelques exceptions près, mais rien d'important ici).
-    $id = (int) $id;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getQuestion()
+    {
+        return $this->question;
+    }
     
-    // On vérifie ensuite si ce nombre est bien strictement positif.
-    if ($id > 0)
+    public function getReponses()
     {
-      // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
-      $this->id = $id;
+        return $this->reponses;
     }
-  }
-  
-  public function setNom($nom)
-  {
-    // On vérifie qu'il s'agit bien d'une chaîne de caractères.
-    if (is_string($nom))
+    
+    // Liste des setters
+    
+    public function setId($id)
     {
-      $this->nom = $nom;
+        // On convertit l'argument en nombre entier.
+        // Si c'en était déjà un, rien ne changera.
+        // Sinon, la conversion donnera le nombre 0 (à quelques exceptions près, mais rien d'important ici).
+        $id = (int) $id;
+    
+        // On vérifie ensuite si ce nombre est bien strictement positif.
+        if ($id > 0)
+        {
+          // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
+          $this->id = $id;
+        }
     }
-  }
-  
-  public function hydrate($data) 
-  {
-    // Affectation de l'id et du nom du quiz aux attributs respectifs
-    $this->setId($data['Quiz_Id']);
-    $this->setNom($data['Quiz_Nom']);
-    // Si il y a une question dans le sous tableau $data, créer un objet pour cette question et appelle la fusion pour savoir si elle éxiste déjà dans l'attribut $questions
-    if (isset($data['Question_Question'])) 
-    {
-      $question = new Question($data);
-      $this->fusionQuestion($question);
-    }
-  }
 
-  public function fusion(Quiz $quiz) 
-  {
-    // Appelle la fonction de fusion des question pour chaque question de l'attribut $questions de $quiz
-    foreach ($quiz->getQuestions() as $question) 
+    public function setType($type)
     {
-      $this->fusionQuestion($question);
+        // On convertit l'argument en nombre entier.
+        // Si c'en était déjà un, rien ne changera.
+        // Sinon, la conversion donnera le nombre 0 (à quelques exceptions près, mais rien d'important ici).
+        $type = (int) $type;
+    
+        // On vérifie ensuite si ce nombre est bien strictement positif.
+        if ($type > 0)
+        {
+          // Si c'est le cas, c'est tout bon, on assigne la valeur à l'attribut correspondant.
+          $this->type = $type;
+        }
     }
-  }
+  
+    public function setQuestion($question)
+    {
+        // On vérifie qu'il s'agit bien d'une chaîne de caractères.
+        if (is_string($question))
+        {
+          $this->question = $question;
+        }
+    }
 
-  public function fusionQuestion(Question $question) 
-  {
-    // Si une question avec l'id de $question éxiste déjà dans l'attribut tableau $questions, fusionne les 2 questions sinon ajoute la question au tableau $questions
-    if (isset($this->questions[$question->getId()])) 
+    public function hydrate($data) 
     {
-      $this->questions[$question->getId()]->fusion($question);
-    } else 
-    {
-      $this->questions[$question->getId()] = $question;
+        // Affectation de l'id, du type et de l'intitulé de la question aux attributs respectifs
+        $this->setId($data['Question_Id']);
+        $this->setType($data['Question_Type']);
+        $this->setQuestion($data['Question_Question']);
+        // Création d'un objet réponse et affectation de cet objet dans l'attribut tableau $reponses
+        $reponse = new Reponse($data);
+        $this->reponses[$reponse->getId()] = $reponse;
     }
-  }
+
+    public function fusion(Question $question)
+    {
+        // Fusionne les questions identiques possédant des réponses différentes (Pour n'avoir qu'une question contenant ses réponses)
+        $this->reponses = array_replace($this->reponses, $question->getReponses());
+    }
 }
