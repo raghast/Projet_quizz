@@ -56,17 +56,6 @@ function check_id($id)
         }       
 }
 
-function remplissage($reponse, $id_quiz)
-{
-    if (empty($reponse)) 
-    {
-            $message = 'Veuillez remplir tout le quiz';
-            addFlash($message);
-            header('Location: ?controller=page_quiz&&id_quiz='.$id_quiz);
-            die;
-    }
-}
-
 function check_variable()
 {
     if (!isset($_GET['id_quiz'])) 
