@@ -41,11 +41,16 @@
                 <h4 style="color: rgba(147,70,23);"> Question n°<?= $j; ?> : <?= $question->getQuestion(); ?> </h4><br/>
                 <?php
                 foreach ($question->getReponses() as $rep) 
-                {
-                  // Fonction remplissage : Vérifie que tous les formulaires soient remplis. Dans le cas contraire, arrête le code et redirige vers le quiz.
-                  remplissage($_POST['reponse'][$j], $_GET['id_quiz']);
+                {                 
+                  // Condition pour voir si une réponse a été sélectionnée
+                  if (!isset($_POST['reponse'][$j])) 
+                  {
+                    echo 'Vous vous êtes tromper !<br/>';
+                    echo 'La bonne réponse était : <strong>' . $rep->getReponse() . '</strong>';
+                    echo "<br/>";
+                  }
                   // Condition pour vérifier si la réponse est juste
-                  if ($_POST['reponse'][$j] == $rep->getReponse()) 
+                  elseif ($_POST['reponse'][$j] == $rep->getReponse()) 
                   { 
                     echo 'Vous avez eu juste !<br/>';
                     echo 'Bonne réponse : <strong>' . $rep->getReponse() . '</strong>';
@@ -58,7 +63,6 @@
                     echo 'Vous vous êtes tromper !<br/>';
                     echo 'La bonne réponse était : <strong>' . $rep->getReponse() . '</strong>';
                     echo "<br/>";
-                  }
                 }
                 }
                 else
@@ -69,9 +73,7 @@
                   $reponses_fausses = 0;
                   $bonnes_reponses = [];
                   foreach ($question->getReponses() as $reponse) 
-                  {
-                    // Encore la même fonction remplissage
-                    remplissage($_POST['reponse'][$reponse->getReponse()], $_GET['id_quiz']);
+                  {                    
                     // Création d'un tableau bonnes_réponses pour stocker les bonnes réponses
                     $bonnes_reponses[$reponse->getId()] = $reponse->getReponse();
                     // Si une seule bonne réponse n'a pas été coché alors l'utilisateur a faux à toute la question
