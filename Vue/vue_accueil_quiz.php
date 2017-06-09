@@ -35,11 +35,12 @@
             {
               $j++;
             ?>
-            <p> <strong style="color: brown;">Quiz n°<?= $j ?> : </strong><a href="?controller=page_quiz&&id_quiz=<?= $quiz['Quiz_Id'];?>"><?= $quiz['Quiz_Nom']; ?></a> <p>
+            <p> <strong style="color: brown;">Quiz n°<?= $j ?> : </strong><a href="?controller=page_quiz&&id_quiz=<?= $quiz['Quiz_Id'];?>&&nom_quiz=<?= $quiz['Quiz_Nom'];?>"><?= $quiz['Quiz_Nom']; ?></a> <p>
             <?php 
-              }             
+            }             
             ?>
           </main>
+          <p> <strong style="color: green;">Historique de vos quizs : </strong><a href="?controller=historiques">Ici</a> <p>
         </div>
       </div>
       <footer class="well">
