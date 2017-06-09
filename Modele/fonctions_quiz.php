@@ -1,5 +1,6 @@
 <?php
 
+// Importation des ID et nom de tous les quizs
 function importation_quiz()
 {
     global $bdd;
@@ -9,6 +10,7 @@ function importation_quiz()
     return $donnees;
 }
 
+// Importation des questions et des réponses du quiz sélectionné
 function importation_tout($id)
 {
     global $bdd;
@@ -20,10 +22,11 @@ function importation_tout($id)
     return $donnees;
 }
 
+// Importation des questions et des bonnes réponses du quiz sélectionné
 function importation_br($id)
 {
     global $bdd;
-    $req = $bdd->prepare('SELECT * FROM quiz qz INNER JOIN questions qu ON qz.Quiz_Id = qu.Quiz_ID INNER JOIN reponses rep ON qu.Question_Id = rep.Question_Id WHERE qz.Quiz_Id = :id AND rep.Reponse_State=1');
+    $req = $bdd->prepare('SELECT * FROM quiz qz INNER JOIN questions qu ON qz.Quiz_Id = qu.Quiz_ID INNER JOIN reponses rep ON qu.Question_Id = rep.Question_Id WHERE qz.Quiz_Id = :id AND rep.Reponse_State!=0');
     $req->bindValue(':id', $id, PDO::PARAM_INT);
     $req->execute();
     $donnees = $req->fetchAll();
@@ -31,34 +34,86 @@ function importation_br($id)
     return $donnees;
 }
 
-function is_autorized($Quiz_Id)
+// Importation de tous les quizs effectués par un utilisateur(id_session) et de ses résultats sur chaque quiz
+function importation_quizs_util($session_id)
 {
-    if (isset($_SESSION['Quiz_done'][$Quiz_Id])) 
+    global $bdd;
+    $req = $bdd->prepare('SELECT * FROM historique WHERE Id_session = :id');
+    $req->bindValue(':id', $session_id, PDO::PARAM_STR);
+    $req->execute();
+    $donnees = $req->fetchAll();
+
+    return $donnees;
+}
+
+// Fonction qui permet de transformer Un tableau de plusieurs tableaux de données en architecture plus lisible (Tableaux d'objets questions qui contiennent des objets réponses)
+function range_tableau($datas, $quiz)
+{
+    foreach ($datas as $data) 
     {
-        $message = 'Vous avez déjà effectué ce quiz !';
-        addFlash($message);
-        header('Location: ?controller=accueil_quiz');
-        die;
+        $quiz_bis = new Quiz($data);
+        if (isset($quiz[$quiz_bis->getId()])) 
+        {
+            // Permet de fusionner le nom de quiz et son id s'il éxiste déjà évitant ainsi la redondance lors de l'ajoùt d'une question
+            $quiz[$quiz_bis->getId()]->fusion($quiz_bis);
+        } else 
+        {
+            // Ajoute un nouveau nom de quiz et son id
+            $quiz[$quiz_bis->getId()] = $quiz_bis;
+        }
+    }
+    return $quiz;
+}
+
+// Fonction qui permet d'insérer en BDD un quiz fait par un utilisateur(en sérialisé), son résultat et son id de session
+function range_hist_bdd($historique, $score, $session_id)
+{
+    global $bdd;
+    $req = $bdd->prepare('INSERT INTO historique (Contenu_Util, Score_util, Id_session, Date_done) VALUES (:contenu, :score, :id_session, :date)');
+    $date = new DateTime();
+    $result = $date->format('Y-m-d H:i:s');
+    $req->bindparam(':contenu', $historique, PDO::PARAM_STR);
+    $req->bindparam(':score', $score, PDO::PARAM_STR);
+    $req->bindparam(':id_session', $session_id, PDO::PARAM_STR);
+    $req->bindparam(':date', $result, PDO::PARAM_STR);
+    $req->execute();
+}
+
+// Fonction qui vérifie si une réponse à une question de type 1 ou 3 est vrai ou fausse 
+function question_verif($question, $reponse)
+{
+    foreach ($question->getReponses() as $rep) 
+    {
+        if ($reponse == $rep->getReponse()) 
+        { 
+            echo 'Vous avez eu juste !<br/>';
+            // Incrémentation du score si la réponse est juste
+            $score ++;
+        }
+        else
+        {
+            echo 'Vous vous êtes tromper !<br/>';
+            echo 'Vérification : <strong>' . $rep->getReponse() . '</strong>';
+            echo "<br/>";
+        }
     }
 }
 
-function check_id($id)
+// Fonction qui regarde si les variables $_GET['id_quiz'] et $_GET['nom_quiz'] éxistent et si elles correspondent à un quiz en BDD
+function check_variables($id, $nom)
 {
-        global $bdd;
-        $req = $bdd->prepare('SELECT Quiz_Id FROM quiz WHERE Quiz_Id = :id_quiz');
-        $req->bindparam('id_quiz', $id, PDO::PARAM_INT);
-        $req->execute();
-        $resultat = $req->fetch();
-        if (empty($resultat)) 
-        {
-            require_once 'Vue/404.php';
-            die;
-        }       
-}
-
-function check_variable()
-{
-    if (!isset($_GET['id_quiz'])) 
+    if (!isset($_GET['id_quiz']) OR !isset($_GET['nom_quiz'])) 
+    {
+        require_once 'Vue/404.php';
+        die;
+    }
+    global $bdd;
+    $req = $bdd->prepare('SELECT Quiz_Id, Quiz_Nom FROM quiz WHERE Quiz_Id = :id_quiz AND Quiz_Nom = :nom_quiz');
+    $req->bindparam('id_quiz', $id, PDO::PARAM_INT);
+    $req->bindparam('nom_quiz', $nom, PDO::PARAM_STR);
+    $req->execute();
+    $resultat = $req->fetch();
+    if (empty($resultat)) 
     {
         require_once 'Vue/404.php';
         die;
