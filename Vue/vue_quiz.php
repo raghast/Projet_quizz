@@ -18,7 +18,7 @@
   <div class="container">
       <header class="jumbotron">
           <h1>Faites un Quiz en ligne !</h1></br></br>
-          <h2>Vous avez selectionné le : <?= $quiz->getNom(); ?></h2>
+          <h2>Vous avez selectionné le : <?= $_GET['nom_quiz'] ?></h2>
           <h4><?php verifFlash(); ?></h4>
       </header>
 
@@ -57,7 +57,7 @@
                   <?php
                 }
             }
-            else             
+            elseif ($question->getType() == 2) 
             { 
             ?>
                   <h4 style="color: rgba(147,70,23);"> Question n°<?= $j; ?> : <?= $question->getQuestion(); ?> </h4><br/>
@@ -72,7 +72,32 @@
                   <p><?= $i;?> : <label><input type="checkbox" name="reponse[<?= $reponse->getReponse(); ?>]" id="reponse[<?= $reponse->getReponse(); ?>]"> <?= $reponse->getReponse(); ?></label></p>
                   <?php
                   }
-          }
+            }
+            elseif ($question->getType() == 3) 
+            {
+            ?>
+                  <h4 style="color: rgba(147,70,23);"> Question n°<?= $j; ?> : <?= $question->getQuestion(); ?> </h4><br/>
+                  <p> Choix de la réponse : </p><br/>  
+                  <!-- formulaire de la réponse (type 3 = nombre à saisir) -->
+                  <p><input type="text" name="nombre[<?= $j; ?>]" id="nombre[<?= $j; ?>]"></p>
+                  <?php
+            }
+            else 
+            {
+            ?>
+                  <h4 style="color: rgba(147,70,23);"> Question n°<?= $j; ?> : <?= $question->getQuestion(); ?> </h4><br/>
+                  <p> Ordre des réponses : </p><br/>  
+                  <?php
+                  // Affichage des reponses grâce à une boucle foreach
+                  foreach ($question->getReponses() as $reponse) 
+                  {
+                  $i++;
+                  ?>
+                  <!-- formulaire de la réponse (type 4 = Chiffre pour l'ordre à saisir) -->
+                  <p><label><input type="text" name="reponse[<?= $reponse->getReponse(); ?>]" id="reponse[<?= $reponse->getReponse(); ?>]"> <?= $reponse->getReponse(); ?></label></p>
+                  <?php 
+                  }
+            }           
           ?>
             <br/>
           <?php
