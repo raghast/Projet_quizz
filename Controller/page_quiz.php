@@ -6,8 +6,8 @@ require_once 'Modele/question.php';
 require_once 'Modele/fonctions_quiz.php';
 require_once 'Modele/reponse.php';
 
-// Fonction de vérification de la page (pour la variable $_GET['id_quiz'] et $_GET['nom_quiz'])
-
+verif_presence_var();
+// Fonctions de vérification de la page (pour la variable $_GET['id_quiz'])
 check_variables($_GET['id_quiz'], $_GET['nom_quiz']);
 
 // Remplissage de la variable $quizs qui contient le Quiz, ses questions et ses réponses
@@ -23,5 +23,6 @@ $j=0;
 
 // Importation de la vue
 require_once 'Vue/vue_quiz.php';
+
 
 
