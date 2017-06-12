@@ -79,34 +79,61 @@ function range_hist_bdd($historique, $score, $session_id)
     $req->execute();
 }
 
-// Fonction qui vérifie si une réponse à une question de type 1 ou 3 est vrai ou fausse 
-function question_verif($question, $reponse)
+// Fonction qui affiche le message juste ou faux suivant la variable $message et incrémente le score
+function affichage_message($message, $score)
 {
+    if ($message == 1) 
+    {
+        echo "Vous avez eu juste !<br>";
+        echo "Solutions :<br>";
+        $score ++;
+    }
+    else
+    {
+        echo "Vous avez eu Faux !<br>";
+        echo "Solutions :<br>";
+    }
+    return $score;
+}
+
+// Affiche les réponses (dont les bonnes en orange) des questions de type 1 - 2 - 3
+function affichage_reponses($question)
+{   
     foreach ($question->getReponses() as $rep) 
     {
-        if ($reponse == $rep->getReponse()) 
-        { 
-            echo 'Vous avez eu juste !<br/>';
-            // Incrémentation du score si la réponse est juste
-            $score ++;
+        if ($rep->getState() == 1) 
+        {
+            echo '<p style=\'color: rgba(255,109,13);\'>' . $rep->getReponse() . '<p>';
         }
         else
         {
-            echo 'Vous vous êtes tromper !<br/>';
-            echo 'Vérification : <strong>' . $rep->getReponse() . '</strong>';
-            echo "<br/>";
+            echo '<p>' . $rep->getReponse() . '<p>';
         }
     }
 }
 
-// Fonction qui regarde si les variables $_GET['id_quiz'] et $_GET['nom_quiz'] éxistent et si elles correspondent à un quiz en BDD
-function check_variables($id, $nom)
+// Affiche les réponses des questions de type 4
+function affichage_reponses_4($question)
+{
+    foreach ($question->getReponses() as $rep) 
+    {
+        echo $rep->getState() . ' - ' . $rep->getReponse() . '<br>';
+    }    
+}
+
+// Vérifie la présence des variable id_quiz et nom_quiz
+function verif_presence_var()
 {
     if (!isset($_GET['id_quiz']) OR !isset($_GET['nom_quiz'])) 
     {
         require_once 'Vue/404.php';
         die;
     }
+}
+
+// Fonction qui regarde si les variables $_GET['id_quiz'] et $_GET['nom_quiz'] éxistent et si elles correspondent à un quiz en BDD
+function check_variables($id, $nom)
+{
     global $bdd;
     $req = $bdd->prepare('SELECT Quiz_Id, Quiz_Nom FROM quiz WHERE Quiz_Id = :id_quiz AND Quiz_Nom = :nom_quiz');
     $req->bindparam('id_quiz', $id, PDO::PARAM_INT);
