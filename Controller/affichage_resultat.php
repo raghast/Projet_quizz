@@ -6,9 +6,9 @@ require_once 'Modele/question.php';
 require_once 'Modele/fonctions_quiz.php';
 require_once 'Modele/reponse.php';
 
-
-// Fonction de vérification de la page (pour la variable $_GET['id_quiz'], $_GET['nom_quiz']
-check_variables();
+verif_presence_var();
+// Fonction de vérification de la page (pour la variable $_GET['id_quiz'], $_GET['nom_quiz'])
+check_variables($_GET['id_quiz'], $_GET['nom_quiz']);
 
 // Même système que pour le controller page_quiz mais importation_br importe un quiz, ses questions et la bonne réponse pour chaque question
 $bonnes_rep = importation_br($_GET['id_quiz']);
