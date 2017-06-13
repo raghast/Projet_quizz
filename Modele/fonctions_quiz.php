@@ -121,6 +121,30 @@ function affichage_reponses_4($question)
     }    
 }
 
+// Affiche les réponses de l'utilisateur
+function hist_affichage_reps_util($quiz, $quizz, $question)
+{
+    echo "<p style=\"color: rgba(85,148,44);\">Votre(Vos) réponse(s) :<p>";
+    echo '<em>' . implode('<br>', $quiz[$quizz->getId()][$question->getId()]) . '</em><br>';
+    echo "<p style=\"color: rgba(85,148,44);\">Toutes les réponses :<p>";
+}
+
+// Affiche toutes les réponses (en gras les justes)
+function hist_affichage_all_reps($question)
+{
+    foreach ($question->getReponses() as $rep)
+    {
+        if ($rep->getState() == 1) 
+        {
+            echo '<strong>' . $rep->getReponse() . '</strong><br>';
+        }
+        else
+        {
+            echo $rep->getReponse() . '<br>';
+        }
+    }
+}
+
 // Vérifie la présence des variable id_quiz et nom_quiz
 function verif_presence_var()
 {
