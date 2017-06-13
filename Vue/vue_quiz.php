@@ -19,7 +19,6 @@
       <header class="jumbotron">
           <h1>Faites un Quiz en ligne !</h1></br></br>
           <h2>Vous avez selectionné le : <?= $_GET['nom_quiz'] ?></h2>
-          <h4><?php verifFlash(); ?></h4>
       </header>
 
       <div class="panel panel-default">
