@@ -48,7 +48,7 @@
                         // Reponse fausse -> $message = 0
                         $message = 0;
                     }
-                    elseif ($$_POST['reponse'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
+                    elseif ($_POST['reponse'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
                     { 
                         // Reponse juste -> $message = 1
                         $message = 1;
@@ -58,44 +58,52 @@
                     // Reponse fausse -> $message = 0
                     $message = 0;
                     }
-                  }          
+                  }
+                  // Affichage du message + Incrémentation du score en cas de bonne réponse + Affichage des réponses(les bonnes en gras)          
                   $score = affichage_message($message, $score);
                   affichage_reponses($question);
                 }
+                // Condition pour savoir quel est le type de la question
                 elseif ($question->getType() == 2) 
                 {
                   $message = 1; 
                   foreach ($question->getReponses() as $rep) 
                   {  
                       // Si une seule bonne réponse n'a pas été coché ou une question fausse a été coché alors l'utilisateur a faux à toute la question
-                      if (!isset($_POST['reponse'][$reponse->getReponse()]) AND $rep->getState() == 1)
+                      if (!isset($_POST['reponse'][$rep->getReponse()]) AND $rep->getState() == 1)
                       { 
                           $message = 0;
                       }
-                      elseif (isset($_POST['reponse'][$reponse->getReponse()]) AND $rep->getState() == 0) 
+                      elseif (isset($_POST['reponse'][$rep->getReponse()]) AND $rep->getState() == 0) 
                       {
                           $message = 0;
                       }
-                  }                              
+                  }
+                  // Affichage du message + Incrémentation du score en cas de bonne réponse + Affichage des réponses(les bonnes en gras)                              
                   $score = affichage_message($message, $score);
                   affichage_reponses($question);
                 }
+                // Condition pour savoir quel est le type de la question
                 elseif ($question->getType() == 3) 
                 {
-                  $message = 1;
-                  if ($_POST['nombre'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
-                  { 
-                      // Reponse juste -> $message = 1
-                      $message = 1;
-                  }
-                  else
+                  foreach ($question->getReponses() as $rep) 
                   {
-                      // Reponse fausse -> $message = 0
-                      $message = 0;
-                  }                              
-                  $score = affichage_message($message, $score);
-                  affichage_reponses($question);
+                    if ($_POST['nombre'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
+                    { 
+                        // Reponse juste -> $message = 1
+                        $message = 1;
+                    }
+                    else
+                    {
+                        // Reponse fausse -> $message = 0
+                        $message = 0;
+                    }
+                   }
+                   // Affichage du message + Incrémentation du score en cas de bonne réponse + Affichage des réponses(les bonnes en gras)                           
+                    $score = affichage_message($message, $score);
+                    affichage_reponses($question);
                 }
+                // Dernier type de question par élimination
                 else
                 { 
                   $message = 1;
@@ -107,12 +115,15 @@
                         $message = 0;
                     }
                   }
+                  // Affichage du message + Incrémentation du score en cas de bonne réponse + Affichage des réponses(le bon ordre)
                   $score = affichage_message($message, $score);
                   affichage_reponses_4($question);                                               
                 }                                            
               }
           }
+          // Calcul du score sur le quiz
           $score_calcul = ceil(($score / $j)*100);
+          // Envoi du quiz sérialisé + son score dans la BDD avec l'identifiant session de l'utilisateur
           range_hist_bdd($hist_serial, $score_calcul, $session_id);
           ?>
           <p style="font-size: 1.5em";>Votre score est de : <strong style="color: red";><?= $score_calcul ?> % de réussite</strong></p>
