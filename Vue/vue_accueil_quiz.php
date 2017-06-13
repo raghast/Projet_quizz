@@ -18,8 +18,7 @@
   <div class="container">
       <header class="jumbotron">
           <h1>Faites un Quiz en ligne !</h1></br>
-          <h2>Liste des Quiz</h2>
-          <h4><?php verifFlash(); ?></h4>
+          <h2>Liste des Quiz</h2>         
       </header>
 
       <div class="panel panel-default">
