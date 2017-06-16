@@ -41,6 +41,7 @@
                 // Condition pour savoir quel est le type de la question
                 if ($question->getType() == 1) 
                 {
+                  $message = 0;
                   foreach ($question->getReponses() as $rep) 
                   {
                     if (!isset($_POST['reponse'][$j])) 
@@ -50,13 +51,9 @@
                     }
                     elseif ($_POST['reponse'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
                     { 
+                        echo "yolo";
                         // Reponse juste -> $message = 1
                         $message = 1;
-                    }
-                    else
-                    {
-                    // Reponse fausse -> $message = 0
-                    $message = 0;
                     }
                   }
                   // Affichage du message + Incrémentation du score en cas de bonne réponse + Affichage des réponses(les bonnes en gras)          
