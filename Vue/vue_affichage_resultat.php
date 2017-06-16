@@ -50,8 +50,7 @@
                         $message = 0;
                     }
                     elseif ($_POST['reponse'][$j] == $rep->getReponse() AND $rep->getState() == 1) 
-                    { 
-                        echo "yolo";
+                    {
                         // Reponse juste -> $message = 1
                         $message = 1;
                     }
